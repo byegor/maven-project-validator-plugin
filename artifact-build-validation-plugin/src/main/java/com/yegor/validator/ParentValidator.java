@@ -34,7 +34,7 @@ public class ParentValidator extends AbstractMojo {
         getLog().info("Starting parent pom validation for type: " + parentType);
         String versionUsedInCurrentProject = parentProject.getVersion();
         if (versionHelper.isSameReleaseVersion(parentType, versionUsedInCurrentProject)) {
-            getLog().info("Using correct version for " + ParentPomType.CORE + " parent pom");
+            getLog().info("Using correct version for " + parentType + " parent pom");
         } else {
             throw new MojoExecutionException("Wrong parent pom, expected to see " + versionHelper.getVersion(ParentPomType.CORE));
         }
