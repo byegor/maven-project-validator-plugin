@@ -1,5 +1,6 @@
 package com.yegor.validator;
 
+import com.yegor.validator.common.entity.ParentPomType;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -14,27 +15,41 @@ public class ParentValidator extends AbstractMojo {
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     MavenProject project;
 
-
-
+    VersionHelper versionHelper = new VersionHelper();
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        MavenProject parent = project.getParent();
-        String groupId = parent.getGroupId();
-        if(isAgillicParent(groupId)){
-            getLog().info("Starting parent pom validation");
-            String artifactId = parent.getArtifactId();
-            if(isCoreParent(artifactId)){
-                String version = parent.getVersion();
+        MavenProject parentProject = project.getParent();
+        String groupId = parentProject.getGroupId();
+        if (isAgillicParent(groupId)) {
+            ParentPomType parentType = getParentType(parentProject.getArtifactId());
+            if (parentType != null) {
+                validateParentPom(parentProject, parentType);
+            } else {
+                throw new IllegalArgumentException("Parent pom not known: " + parentProject.getArtifactId());
             }
-
         }
     }
 
-    public boolean isAgillicParent(String groupId) {
+    private void validateParentPom(MavenProject parentProject, ParentPomType parentType) throws MojoExecutionException {
+        getLog().info("Starting parent pom validation for type: " + parentType);
+        String versionUsedInCurrentProject = parentProject.getVersion();
+        if (versionHelper.isSameReleaseVersion(parentType, versionUsedInCurrentProject)) {
+            getLog().info("Using correct version for " + ParentPomType.CORE + " parent pom");
+        } else {
+            throw new MojoExecutionException("Wrong parent pom, expected to see " + versionHelper.getVersion(ParentPomType.CORE));
+        }
+    }
+
+    private boolean isAgillicParent(String groupId) {
         return "com.agillic.maven".equals(groupId);
     }
 
-    public boolean isCoreParent(String artifactId) {
-        return "agillic-core-parent".equals(artifactId);
+    private ParentPomType getParentType(String artifactId) {
+        for (ParentPomType pom : ParentPomType.values()) {
+            if (pom.artifactId.equals(artifactId)) {
+                return pom;
+            }
+        }
+        return null;
     }
 }

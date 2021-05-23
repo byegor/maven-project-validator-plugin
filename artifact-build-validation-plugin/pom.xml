@@ -10,5 +10,30 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>artifact-build-validation-plugin</artifactId>
+    <packaging>maven-plugin</packaging>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.yegor</groupId>
+            <artifactId>artifact-version-collector-plugin</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.yegor</groupId>
+                <artifactId>artifact-version-collector-plugin</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>collect-parent-pom-versions</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

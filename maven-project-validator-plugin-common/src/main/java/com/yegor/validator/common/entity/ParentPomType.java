@@ -1,4 +1,4 @@
-package validator.common.entity;
+package com.yegor.validator.common.entity;
 
 public enum ParentPomType {
     CORE("com.agillic.maven", "agillic-core-parent"); //TODO add service

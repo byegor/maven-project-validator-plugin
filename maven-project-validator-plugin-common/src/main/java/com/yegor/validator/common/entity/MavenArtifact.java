@@ -1,4 +1,4 @@
-package validator.common.entity;
+package com.yegor.validator.common.entity;
 
 import java.util.Date;
 

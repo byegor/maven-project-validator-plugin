@@ -1,10 +1,10 @@
-package validator.common.service;
+package com.yegor.validator.common.service;
 
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
-import validator.common.entity.MavenArtifact;
+import com.yegor.validator.common.entity.MavenArtifact;
 
 class CassandraService implements DataService {
 
